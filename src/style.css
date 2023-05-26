@@ -51,29 +51,26 @@ h1 {
 .player-ships,
 .opponent-ships {
   display: flex;
+  justify-content: center;
   gap: 2em;
   width: 100%;
   color: var(--color-1);
   font-size: 1.2rem;
 }
 
-.player-ships div,
-.opponent-ships div {
-  display: flex;
-  flex-direction: column;
-}
-
-.player-ships div div,
-.opponent-ships div div {
-  display: flex;
-  flex-direction: row;
+.ship-status {
+  display: grid;
+  grid-template: 1fr / 1fr 1fr;
   align-items: center;
-  width: 100%;
-  height: 1.2em;
+  gap: 1em
 }
 
-.player-ships div div div,
-.opponent-ships div div div {
+.ship-size {
+  display: flex;
+}
+
+.p_ship-block,
+.o_ship-block {
   width: 0.9em;
   height: 0.9em;
   background-color: #b8ff4d;
@@ -88,8 +85,6 @@ h1 {
 .opponent-grid {
   width: 100%;
   background-color: var(--color-2);
-  border-collapse: collapse;
-  border: solid 2px black;
 }
 
 .player-grid:hover,
@@ -97,8 +92,14 @@ h1 {
   cursor: crosshair;
 }
 
+tr {
+  display: flex;
+}
+
 td {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 2.2em;
   height: 2.2em;
   border: solid 1px var(--color-4);
@@ -116,18 +117,18 @@ td:hover{
   background-color: #60cdeb;
 }
 
-.miss:hover,
-.hit:hover {
-  cursor: default;
-  border: none;
-}
-
 .hit {
   color: red;
   background-image: url('./images/hit.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-color: #707070;
+}
+
+.miss:hover,
+.hit:hover {
+  cursor: default;
+  border: solid 1px var(--color-4);
 }
 
 .hidden {

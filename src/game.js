@@ -1,3 +1,5 @@
+import { p_shipList, o_shipList } from "./ship";
+
 const playerGrid = document.querySelector('.player-grid');
 const opponentGrid = document.querySelector('.opponent-grid');
 
@@ -103,7 +105,15 @@ export const receiveAttack = (grid, x, y) => {
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
       td.classList.remove('hidden');
-    }
+      for (let i=0; i < p_shipList.length; i++) {
+        for (let j=0; j < p_shipList[i].playerCoords.length; j++) {
+          if (JSON.stringify(p_shipList[i].playerCoords[j]) == JSON.stringify([parseInt(x), parseInt(y)])) {
+            p_shipList[i].hit();
+            checkShipStatus(playerGrid, p_shipList[i]);
+          };
+        };
+      };
+    };
   };
   if (grid === opponentGrid) {
     td = document.getElementById(`${x},${y},o`);
@@ -115,7 +125,30 @@ export const receiveAttack = (grid, x, y) => {
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
       td.classList.remove('hidden');
+      for (let i=0; i < o_shipList.length; i++) {
+        for (let j=0; j < o_shipList[i].opponentCoords.length; j++) {
+          if (JSON.stringify(o_shipList[i].opponentCoords[j]) == JSON.stringify([parseInt(x), parseInt(y)])) {
+            o_shipList[i].hit();
+            checkShipStatus(opponentGrid, o_shipList[i]);
+          };
+        };
+      };
     };
   };
 };
 
+const checkShipStatus = (grid, ship) => {
+  if (grid === playerGrid) if (ship.isSunk()) {
+      const shipListDisplay = document.getElementsByClassName(`p_ship-block ${ship.name}`);
+      for (let i=0; i < shipListDisplay.length; i++) {
+        shipListDisplay[i].style.backgroundColor = '#ff4d4d';
+      };
+    };
+
+  if (grid === opponentGrid) if (ship.isSunk()) {
+    const shipListDisplay = document.getElementsByClassName(`o_ship-block ${ship.name}`);
+      for (let i=0; i < shipListDisplay.length; i++) {
+        shipListDisplay[i].style.backgroundColor = '#ff4d4d';
+      };
+  };
+};
