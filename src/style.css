@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+:root {
+  --color-1: #F6F1F1;
+  --color-2: #19A7CE;
+  --color-3: #146C94;
+  --color-4: #404040;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Ubuntu', sans-serif;;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5em;
+  padding: 3em;
+  background-color: #ebe0e0;
+}
+
+h1 {
+  font-size: 3rem;
+  font-style: italic;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 3em;
+  width: 100%;
+  padding: 2em;
+  background-color: var(--color-3);
+}
+
+.player-container,
+.opponent-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+/* ship lists */
+
+.player-ships,
+.opponent-ships {
+  display: flex;
+  gap: 2em;
+  width: 100%;
+  color: var(--color-1);
+  font-size: 1.2rem;
+}
+
+.player-ships div,
+.opponent-ships div {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-ships div div,
+.opponent-ships div div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 1.2em;
+}
+
+.player-ships div div div,
+.opponent-ships div div div {
+  width: 0.9em;
+  height: 0.9em;
+  background-color: #b8ff4d;
+  border: solid 1px black;
+  border-collapse: collapse;
+}
+
+
+/* grids */
+
+.player-grid,
+.opponent-grid {
+  width: 100%;
+  background-color: var(--color-2);
+  border-collapse: collapse;
+  border: solid 2px black;
+}
+
+.player-grid:hover,
+.opponent-grid:hover {
+  cursor: crosshair;
+}
+
+td {
+  text-align: center;
+  width: 2.2em;
+  height: 2.2em;
+  border: solid 1px var(--color-4);
+}
+
+td:hover{
+  border: solid 2px black;
+}
+
+.ship {
+  background-color: var(--color-4);
+}
+
+.miss {
+  background-color: #60cdeb;
+}
+
+.miss:hover,
+.hit:hover {
+  cursor: default;
+  border: none;
+}
+
+.hit {
+  color: red;
+  background-image: url('./images/hit.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #707070;
+}
+
+.hidden {
+  background-color: var(--color-2);
+}
