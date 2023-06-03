@@ -24,8 +24,11 @@ body {
   background-color: #ebe0e0;
 }
 
-h1 {
-  font-size: 3rem;
+header {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-size: 1.5rem;
   font-style: italic;
 }
 

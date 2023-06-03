@@ -1,4 +1,5 @@
 import { p_shipList, o_shipList } from "./ship";
+import { activePlayer, players, switchPlayer } from "./player";
 
 const playerGrid = document.querySelector('.player-grid');
 const opponentGrid = document.querySelector('.opponent-grid');
@@ -101,6 +102,9 @@ export const receiveAttack = (grid, x, y) => {
       td.innerHTML = `&#8226;`;
       td.classList.replace('empty', 'miss');
       td.classList.remove('hidden');
+      switchPlayer();
+      grid.removeEventListener('click', playerAttackHandler);
+      opponentGrid.addEventListener('click', opponentAttackHandler);
     }
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
@@ -121,6 +125,9 @@ export const receiveAttack = (grid, x, y) => {
       td.innerHTML = `&#8226;`;
       td.classList.replace('empty', 'miss');
       td.classList.remove('hidden');
+      switchPlayer();
+      grid.removeEventListener('click', opponentAttackHandler);
+      playerGrid.addEventListener('click', playerAttackHandler);
     }
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
@@ -152,3 +159,21 @@ const checkShipStatus = (grid, ship) => {
       };
   };
 };
+
+function playerAttackHandler(event) {
+  let e = event;
+  if (e.target !== playerGrid) {
+    let coords = e.target.id.split(',');
+    receiveAttack(playerGrid, coords[0], coords[1]);
+  };
+};
+
+function opponentAttackHandler(event) {
+  let e = event;
+  if (e.target !== opponentGrid) {
+    let coords = e.target.id.split(',');
+    receiveAttack(opponentGrid, coords[0], coords[1]);
+  };
+};
+
+opponentGrid.addEventListener('click', opponentAttackHandler); 
