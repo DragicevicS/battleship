@@ -19,7 +19,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5em;
+  gap: 4em;
   padding: 3em;
   background-color: #ebe0e0;
 }
@@ -54,6 +54,7 @@ header {
   flex-direction: column;
   gap: 2em;
 }
+
 
 /* ship lists */
 
@@ -96,7 +97,6 @@ header {
   background-color: var(--color-2);
 }
 
-.player-grid:hover,
 .opponent-grid:hover {
   cursor: crosshair;
 }
@@ -144,7 +144,8 @@ td:hover{
   background-color: var(--color-2);
 }
 
-/* button */
+
+/* buttons */
 
 .btn-container {
   display: flex;

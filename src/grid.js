@@ -1,5 +1,5 @@
 import { p_shipList, o_shipList } from "./ship";
-import { players, switchPlayer } from "./player";
+import { AIattack, players, switchPlayer } from "./player";
 
 const playerGrid = document.querySelector('.player-grid');
 const opponentGrid = document.querySelector('.opponent-grid');
@@ -7,7 +7,7 @@ const shipSizes = document.getElementsByClassName('p_ship-block');
 const p_totalHits = playerGrid.getElementsByClassName('hit');
 const o_totalHits = opponentGrid.getElementsByClassName('hit');
 
-export const createGrid = (grid, size) => {
+export const createGrid = (grid, size) => { // create a grid (size x size)
   for (let i=0; i < size; i++) {
     let gridRow = document.createElement('tr');
     grid.appendChild(gridRow);
@@ -15,6 +15,7 @@ export const createGrid = (grid, size) => {
       let cell = document.createElement('td');
       grid.children[i].appendChild(cell);
       cell.classList = 'empty'
+      // set an unique id for each cell depending on which grid it's placed
       if (grid === playerGrid) cell.setAttribute('id', `${i},${j},p`);
       if (grid === opponentGrid) cell.setAttribute('id', `${i},${j},o`);
     };
@@ -23,12 +24,13 @@ export const createGrid = (grid, size) => {
   return grid;
 };
 
-export const placePlayerShip = (ship) => {
+export const placePlayerShip = (ship) => { // places player ships on player grid at random coords
   let empty = true;
   let rotation = Math.random() < 0.5 ? 'h' : 'v';
   let x = Math.floor(Math.random() * 10);
   let y = Math.floor(Math.random() * 10);
   let td = document.getElementById(`${x},${y},p`);
+  // checks if the random selected cell is empty and if the rest of the cell empty, depending on the ship's length and rotation
   if (td.classList.contains('empty')) {
     if (rotation === 'h') {
       for (let i=0; i < ship.length; i++) {
@@ -61,8 +63,8 @@ export const placePlayerShip = (ship) => {
           break;
         };
       };
-      if (empty === false) placePlayerShip(ship);
-      if (empty === true) {
+      if (empty === false) placePlayerShip(ship); // if it's not a valid position, try again in a different place
+      if (empty === true) { // if it's a valid position, place ship
         for (let i=0; i < ship.length; i++) {
           document.getElementById(`${x + i},${y},p`).classList.remove('empty');
           document.getElementById(`${x + i},${y},p`).classList.add('ship', `${ship.name}`);
@@ -70,10 +72,10 @@ export const placePlayerShip = (ship) => {
         };
       };
     };
-  } else placePlayerShip(ship);
+  } else placePlayerShip(ship); // if the selected cell is not empty, try again in a different place
 };
 
-export const placeOpponentShip = (ship) => {
+export const placeOpponentShip = (ship) => { // same as the placePlayerShip function, but uses a ships and coords for the opponent's grid
   let empty = true;
   let rotation = Math.random() < 0.5 ? 'h' : 'v';
   let x = Math.floor(Math.random() * 10);
@@ -123,7 +125,7 @@ export const placeOpponentShip = (ship) => {
   } else placeOpponentShip(ship);
 };
 
-export const receiveAttack = (grid, x, y) => {
+export const receiveAttack = (grid, x, y) => { // display attack on grids if a valid cell is selected
   let td;
   if (grid === playerGrid) {
     td = document.getElementById(`${x},${y},p`);
@@ -132,8 +134,9 @@ export const receiveAttack = (grid, x, y) => {
       td.classList.replace('empty', 'miss');
       td.classList.remove('hidden');
       switchPlayer();
-      grid.removeEventListener('click', playerAttackHandler);
-      opponentGrid.addEventListener('click', opponentAttackHandler);
+      // event listener swapping if 2 players are playing, instead of player vs AI
+      // grid.removeEventListener('click', playerAttackHandler);
+      // opponentGrid.addEventListener('click', opponentAttackHandler);
     }
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
@@ -143,6 +146,9 @@ export const receiveAttack = (grid, x, y) => {
           if (JSON.stringify(p_shipList[i].playerCoords[j]) == JSON.stringify([parseInt(x), parseInt(y)])) {
             p_shipList[i].hit();
             checkShipStatus(playerGrid, p_shipList[i]);
+            setTimeout(() => { // if the AI makes a hit, it does another move until it misses
+              AIattack();
+            }, 500);
           };
         };
       };
@@ -155,8 +161,9 @@ export const receiveAttack = (grid, x, y) => {
       td.classList.replace('empty', 'miss');
       td.classList.remove('hidden');
       switchPlayer();
-      grid.removeEventListener('click', opponentAttackHandler);
-      playerGrid.addEventListener('click', playerAttackHandler);
+      // event listener swapping if 2 players are playing, instead of player vs AI
+      // grid.removeEventListener('click', opponentAttackHandler);
+      // playerGrid.addEventListener('click', playerAttackHandler);
     }
     else if (td.classList.contains('ship')) {
       td.classList.replace('ship', 'hit');
@@ -173,7 +180,7 @@ export const receiveAttack = (grid, x, y) => {
   };
 };
 
-const checkShipStatus = (grid, ship) => {
+const checkShipStatus = (grid, ship) => { // checks if the current ship being hit is destroyed, updates the ship list if it is and also checks if all ships are destroyed
   if (grid === playerGrid) if (ship.isSunk()) {
       const shipListDisplay = document.getElementsByClassName(`p_ship-block ${ship.name}`);
       for (let i=0; i < shipListDisplay.length; i++) {
@@ -191,7 +198,7 @@ const checkShipStatus = (grid, ship) => {
   };
 };
 
-function playerAttackHandler(event) {
+function playerAttackHandler(event) { // handler function for the player's grid event listener
   let e = event;
   if (e.target !== playerGrid) {
     let coords = e.target.id.split(',');
@@ -199,7 +206,7 @@ function playerAttackHandler(event) {
   };
 };
 
-export function opponentAttackHandler(event) {
+export function opponentAttackHandler(event) { // handler function for the opponent's grid event listener
   let e = event;
   if (e.target !== opponentGrid) {
     let coords = e.target.id.split(',');

@@ -1,4 +1,4 @@
-const shipFactory = (length, name) => {
+const shipFactory = (length, name) => { // factory function for creating ships with specific length, name and methods
   let numOfHits = 0;
   let playerCoords = [];
   let opponentCoords = [];
@@ -7,6 +7,7 @@ const shipFactory = (length, name) => {
   return { numOfHits, playerCoords, opponentCoords, length, name, hit, isSunk};
 };
 
+// creating ship for each player and adding them to ship lists
 const p_carrier = shipFactory(5, 'Carrier');
 const p_battleship = shipFactory(4, 'Battleship');
 const p_destroyer = shipFactory(3, 'Destroyer');
@@ -18,16 +19,15 @@ const o_battleship = shipFactory(4, 'Battleship');
 const o_destroyer = shipFactory(3, 'Destroyer');
 const o_submarine = shipFactory(3, 'Submarine');
 const o_patrolBoat = shipFactory(2, 'Patrol-boat');
-// const one = shipFactory(1, 'One block boat')
 
 export const p_shipList = [p_carrier, p_battleship, p_destroyer, p_submarine, p_patrolBoat];
-
 export const o_shipList = [o_carrier, o_battleship, o_destroyer, o_submarine, o_patrolBoat];
+
 
 const playerShips = document.querySelector('.player-ships');
 const opponentShips = document.querySelector('.opponent-ships');
 
-export const displayShipList = (player, list) => {
+export const displayShipList = (player, list) => { // displays ship names and their size
   let shipInfo = document.createElement('div');
 
   for (let i=0; i < list.length; i++) {
