@@ -1,8 +1,11 @@
 import { p_shipList, o_shipList } from "./ship";
-import { activePlayer, players, switchPlayer } from "./player";
+import { players, switchPlayer } from "./player";
 
 const playerGrid = document.querySelector('.player-grid');
 const opponentGrid = document.querySelector('.opponent-grid');
+const shipSizes = document.getElementsByClassName('p_ship-block');
+const p_totalHits = playerGrid.getElementsByClassName('hit');
+const o_totalHits = opponentGrid.getElementsByClassName('hit');
 
 export const createGrid = (grid, size) => {
   for (let i=0; i < size; i++) {
@@ -20,17 +23,25 @@ export const createGrid = (grid, size) => {
   return grid;
 };
 
-export const placePlayerShip = (ship, x, y, rotation) => {
+export const placePlayerShip = (ship) => {
   let empty = true;
+  let rotation = Math.random() < 0.5 ? 'h' : 'v';
+  let x = Math.floor(Math.random() * 10);
+  let y = Math.floor(Math.random() * 10);
   let td = document.getElementById(`${x},${y},p`);
   if (td.classList.contains('empty')) {
     if (rotation === 'h') {
       for (let i=0; i < ship.length; i++) {
+        if (y + i > 9) {
+          empty = false;
+          break;
+        };
         if (!document.getElementById(`${x},${y + i},p`).classList.contains('empty')) {
           empty = false;
           break;
         };
       };
+      if (empty === false) placePlayerShip(ship);
       if (empty === true) {
         for (let i=0; i < ship.length; i++) {
           document.getElementById(`${x},${y + i},p`).classList.remove('empty');
@@ -41,11 +52,16 @@ export const placePlayerShip = (ship, x, y, rotation) => {
     };
     if (rotation === 'v') {
       for (let i=0; i < ship.length; i++) {
+        if (x + i > 9) {
+          empty = false;
+          break;
+        };
         if (!document.getElementById(`${x + i},${y},p`).classList.contains('empty')) {
           empty = false;
           break;
         };
       };
+      if (empty === false) placePlayerShip(ship);
       if (empty === true) {
         for (let i=0; i < ship.length; i++) {
           document.getElementById(`${x + i},${y},p`).classList.remove('empty');
@@ -54,20 +70,28 @@ export const placePlayerShip = (ship, x, y, rotation) => {
         };
       };
     };
-  };
+  } else placePlayerShip(ship);
 };
 
-export const placeOpponentShip = (ship, x, y, rotation) => {
+export const placeOpponentShip = (ship) => {
   let empty = true;
+  let rotation = Math.random() < 0.5 ? 'h' : 'v';
+  let x = Math.floor(Math.random() * 10);
+  let y = Math.floor(Math.random() * 10);
   let td = document.getElementById(`${x},${y},o`);
   if (td.classList.contains('empty')) {
     if (rotation === 'h') {
       for (let i=0; i < ship.length; i++) {
+        if (y + i > 9) {
+          empty = false;
+          break;
+        };
         if (!document.getElementById(`${x},${y + i},o`).classList.contains('empty')) {
           empty = false;
           break;
         };
       };
+      if (empty === false) placeOpponentShip(ship);
       if (empty === true) {
         for (let i=0; i < ship.length; i++) {
           document.getElementById(`${x},${y + i},o`).classList.remove('empty');
@@ -78,11 +102,16 @@ export const placeOpponentShip = (ship, x, y, rotation) => {
     };
     if (rotation === 'v') {
       for (let i=0; i < ship.length; i++) {
+        if (x + i > 9) {
+          empty = false;
+          break;
+        };
         if (!document.getElementById(`${x + i},${y},o`).classList.contains('empty')) {
           empty = false;
           break;
         };
       };
+      if (empty === false) placeOpponentShip(ship);
       if (empty === true) {
         for (let i=0; i < ship.length; i++) {
           document.getElementById(`${x + i},${y},o`).classList.remove('empty');
@@ -91,9 +120,9 @@ export const placeOpponentShip = (ship, x, y, rotation) => {
         };
       };
     };
-  };
+  } else placeOpponentShip(ship);
 };
-  
+
 export const receiveAttack = (grid, x, y) => {
   let td;
   if (grid === playerGrid) {
@@ -150,6 +179,7 @@ const checkShipStatus = (grid, ship) => {
       for (let i=0; i < shipListDisplay.length; i++) {
         shipListDisplay[i].style.backgroundColor = '#ff4d4d';
       };
+      if (p_totalHits.length === shipSizes.length) setTimeout(() => { alert(`${players[1]} won!`); location.reload(); }, 100);
     };
 
   if (grid === opponentGrid) if (ship.isSunk()) {
@@ -157,6 +187,7 @@ const checkShipStatus = (grid, ship) => {
       for (let i=0; i < shipListDisplay.length; i++) {
         shipListDisplay[i].style.backgroundColor = '#ff4d4d';
       };
+      if (o_totalHits.length === shipSizes.length) setTimeout(() => { alert(`${players[0]} won!`); location.reload(); } , 100);
   };
 };
 
@@ -168,12 +199,10 @@ function playerAttackHandler(event) {
   };
 };
 
-function opponentAttackHandler(event) {
+export function opponentAttackHandler(event) {
   let e = event;
   if (e.target !== opponentGrid) {
     let coords = e.target.id.split(',');
     receiveAttack(opponentGrid, coords[0], coords[1]);
   };
 };
-
-opponentGrid.addEventListener('click', opponentAttackHandler); 
