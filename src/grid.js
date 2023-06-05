@@ -148,7 +148,7 @@ export const receiveAttack = (grid, x, y) => { // display attack on grids if a v
             checkShipStatus(playerGrid, p_shipList[i]);
             setTimeout(() => { // if the AI makes a hit, it does another move until it misses
               AIattack();
-            }, 500);
+            }, 800);
           };
         };
       };

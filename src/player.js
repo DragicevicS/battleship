@@ -18,7 +18,7 @@ export const switchPlayer = () => { // switch player on end of the turn
     activePlayer = players[1];
     setTimeout(() => {
       AIattack();
-    }, 500);
+    }, 800);
   } else {
     opponentGrid.addEventListener('click', opponentAttackHandler);
     opponentGrid.style.opacity = '1';
@@ -52,7 +52,6 @@ export const AIattack = function() { // make the AI choose a random, unselected 
   else {
     AImoves.push(newMove);
     receiveAttack(playerGrid, x, y); // display move if it's a valid (unselected) cell
-    console.log(newMove, AImoves);
   };
 };
 
